@@ -132,11 +132,6 @@ class LotlistViewController: UITableViewController, UIViewControllerPreviewingDe
             attrs = [NSAttributedStringKey.foregroundColor: UIColor.red]
             drop(L10n.outdatedDataWarning.string, state: .blur(.dark))
         }
-
-        let dateFormatter = DateFormatter(dateFormat: "dd.MM.yyyy HH:mm", timezone: nil)
-        DispatchQueue.main.async {
-            self.refreshControl?.attributedTitle = NSAttributedString(string: "\(L10n.lastUpdated(dateFormatter.string(from: lastUpdated)))", attributes: attrs)
-        }
     }
 
 	/**
