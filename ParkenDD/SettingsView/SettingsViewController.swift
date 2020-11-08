@@ -158,18 +158,24 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
 
 			// Don't let the user select a location based sorting option if the required authorization is missing
 			if indexPath.row == 1 || indexPath.row == 4 {
-				if Location.authState != .authorizedWhenInUse {
-					let alertController = UIAlertController(title: L10n.locationDataErrorTitle.string, message: L10n.locationDataError.string, preferredStyle: UIAlertControllerStyle.alert)
-					alertController.addAction(UIAlertAction(title: L10n.cancel.string, style: UIAlertActionStyle.cancel, handler: nil))
-					alertController.addAction(UIAlertAction(title: L10n.settings.string, style: UIAlertActionStyle.default, handler: {
-						(action) in
-						UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
-					}))
-					present(alertController, animated: true, completion: nil)
+                
+                switch Location.authState {
+                case .authorized:
+                    let alertController = UIAlertController(title: L10n.locationDataErrorTitle.string, message: L10n.locationDataError.string, preferredStyle: UIAlertControllerStyle.alert)
+                    alertController.addAction(UIAlertAction(title: L10n.cancel.string, style: UIAlertActionStyle.cancel, handler: nil))
+                    alertController.addAction(UIAlertAction(title: L10n.settings.string, style: UIAlertActionStyle.default, handler: {
+                        (action) in
+                        UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
+                    }))
+                    present(alertController, animated: true, completion: nil)
 
-					tableView.deselectRow(at: indexPath, animated: true)
-					return
-				}
+                    tableView.deselectRow(at: indexPath, animated: true)
+                case .denied:
+                    #warning("Should we notify the user?")
+                    
+                case .pending:
+                    #warning("Should we request authorization?")
+                }
 			}
 
 			for row in 0...4 {

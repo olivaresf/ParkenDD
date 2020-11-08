@@ -54,20 +54,32 @@ class LotlistViewController: UITableViewController, UIViewControllerPreviewingDe
 
 	override func viewWillAppear(_ animated: Bool) {
 		tableView.reloadData()
-
+        
 		// Start getting location updates if the user wants lots sorted by distance
 		if let sortingType = UserDefaults.standard.string(forKey: Defaults.sortingType), sortingType == Sorting.distance || sortingType == Sorting.euclid {
-			if Location.authState == .authorizedWhenInUse {
+            
+            switch Location.authState {
+            
+            case .authorized:
                 Location.manager.startUpdatingLocation()
-			} else {
-				let alertController = UIAlertController(title: L10n.locationDataErrorTitle.string, message: L10n.locationDataError.string, preferredStyle: UIAlertControllerStyle.alert)
-				alertController.addAction(UIAlertAction(title: L10n.cancel.string, style: UIAlertActionStyle.cancel, handler: nil))
-				alertController.addAction(UIAlertAction(title: L10n.settings.string, style: UIAlertActionStyle.default, handler: {
-					(action) in
-					UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
-				}))
-				present(alertController, animated: true, completion: nil)
-			}
+                
+            case .denied:
+                let alertController = UIAlertController(title: L10n.locationDataErrorTitle.string,
+                                                        message: L10n.locationDataError.string,
+                                                        preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: L10n.cancel.string,
+                                                        style: .cancel,
+                                                        handler: nil))
+                alertController.addAction(UIAlertAction(title: L10n.settings.string,
+                                                        style: .default,
+                                                        handler: { (action) in
+                    UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
+                }))
+                present(alertController, animated: true, completion: nil)
+                
+            case .pending:
+                #warning("Should we request authorization?")
+            }
 		} else {
 			Location.manager.stopUpdatingLocation()
 		}

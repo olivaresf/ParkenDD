@@ -10,6 +10,24 @@ import Foundation
 import CoreLocation
 
 class Location: NSObject {
+    
+    enum AuthorizationStatus {
+        case authorized
+        case pending
+        case denied
+        
+        fileprivate init(status: CLAuthorizationStatus) {
+            switch status {
+            case .authorizedAlways, .authorizedWhenInUse:
+                self = .authorized
+            case .denied, .restricted:
+                self = .denied
+            case .notDetermined:
+                self = .pending
+            }
+        }
+    }
+    
     private override init() {
         super.init()
         Location.manager.delegate = self
@@ -17,8 +35,8 @@ class Location: NSObject {
 
     static let shared = Location()
     static let manager = CLLocationManager()
-    static var authState: CLAuthorizationStatus {
-        return CLLocationManager.authorizationStatus()
+    static var authState: AuthorizationStatus {
+        return AuthorizationStatus(status: CLLocationManager.authorizationStatus())
     }
 
     var lastLocation: CLLocation?
