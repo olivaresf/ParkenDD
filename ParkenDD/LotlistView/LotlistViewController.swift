@@ -66,12 +66,12 @@ class LotlistViewController: UITableViewController, UIViewControllerPreviewingDe
             case .denied:
                 let alertController = UIAlertController(title: L10n.locationDataErrorTitle.string,
                                                         message: L10n.locationDataError.string,
-                                                        preferredStyle: UIAlertControllerStyle.alert)
+                                                        preferredStyle: .alert)
                 alertController.addAction(UIAlertAction(title: L10n.cancel.string,
-                                                        style: UIAlertActionStyle.cancel,
+                                                        style: .cancel,
                                                         handler: nil))
                 alertController.addAction(UIAlertAction(title: L10n.settings.string,
-                                                        style: UIAlertActionStyle.default,
+                                                        style: .default,
                                                         handler: { (action) in
                     UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
                 }))
