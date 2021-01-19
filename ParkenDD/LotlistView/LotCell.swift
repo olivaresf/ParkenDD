@@ -77,7 +77,7 @@ class LotCell: UITableViewCell {
 		} else {
 			forecastIndicator?.image = nil
 		}
-		forecastIndicator?.alpha = 0.6
+        forecastIndicator?.alpha = 0.6
 		forecastIndicator?.tintColor = UIColor.white
 
         let formattedPercentage = String(format: "%.0f", percentage * 100)
