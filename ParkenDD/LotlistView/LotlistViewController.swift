@@ -136,6 +136,7 @@ class LotlistViewController: UITableViewController, UIViewControllerPreviewingDe
         let dateFormatter = DateFormatter(dateFormat: "dd.MM.yyyy HH:mm", timezone: nil)
         DispatchQueue.main.async {
             self.refreshControl?.attributedTitle = NSAttributedString(string: "\(L10n.lastUpdated(dateFormatter.string(from: lastUpdated)))", attributes: attrs)
+            
         }
     }
 
@@ -198,6 +199,7 @@ class LotlistViewController: UITableViewController, UIViewControllerPreviewingDe
 		DispatchQueue.main.async(execute: { [unowned self] () -> Void in
 			self.showReloadButton()
 			self.refreshControl?.beginRefreshing() // leaving this here to fix a slight offset bug with the refresh control's attributed title
+            self.refreshControl!.backgroundColor = UIColor.clear
 			self.refreshControl?.endRefreshing()
 		})
 	}
