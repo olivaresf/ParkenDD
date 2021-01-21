@@ -11,32 +11,26 @@ import UIKit
 struct Colors {
 	static let favYellow = UIColor(rgba: "#F9E510")
 	static let unfavYellow = UIColor(rgba: "#F4E974")
-
-	/**
-	Return a color between green and red based on a percentage value
-
-	- parameter percentage: value between 0 and 1
-	- parameter emptyLots: number of empty lots
-
-	- returns: UIColor
-	*/
-	static func colorBasedOnPercentage(_ percentage: Double, emptyLots: Int) -> UIColor {
-
-		let hue = 1 - (percentage * 0.3 + 0.7) // I want to limit this to the colors between 0 and 0.3
-
-		let useGrayscale = UserDefaults.standard.bool(forKey: Defaults.grayscaleUI)
-		if useGrayscale {
-			if emptyLots <= 0 {
-				return UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0)
-			}
-			return UIColor(red: CGFloat(1 - (hue+0.2)), green: CGFloat(1 - (hue+0.2)), blue: CGFloat(1 - (hue+0.2)), alpha: 1.0)
+	
+	//New Colors based os Parking space availability
+	static let zambeziGrey = UIColor(rgba: "#5C5C5C") // No availability (100%): 0x5C5C5C
+	static let purple = UIColor(rgba: "#7F0304")      // Few Spaces Left (85%-99%): 0x7F0304
+	static let greenCyan = UIColor(rgba: "#1DAA8C")   // Spaces Left (40%-84%): 0x1DAA8C
+	static let darkGreen = UIColor(rgba: "#006A39")   // Many Spaces Left: (0%-40%):  0x006A39
+	
+	static func colorBasedOnPercentage(_ percentage: Double) -> UIColor {
+		
+		let percentageInt = Int(percentage * 100)
+		
+		switch percentageInt {
+		case 100: return Colors.zambeziGrey
+		case 85...99: return Colors.purple
+		case 40...84: return Colors.greenCyan
+		default: return Colors.darkGreen
+			
 		}
-
-		if emptyLots <= 0 {
-			return UIColor(hue: CGFloat(hue), saturation: 0.54, brightness: 0.7, alpha: 1.0)
-		}
-		return UIColor(hue: CGFloat(hue), saturation: 0.54, brightness: 0.8, alpha: 1.0)
 	}
+	
 }
 
 extension UIColor {

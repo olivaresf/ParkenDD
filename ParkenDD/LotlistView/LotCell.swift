@@ -69,7 +69,7 @@ class LotCell: UITableViewCell {
 		} else if percentage > 0.99 {
 			percentage = 0.99
 		}
-		backgroundColor = Colors.colorBasedOnPercentage(percentage, emptyLots: lot.free)
+		backgroundColor = Colors.colorBasedOnPercentage(percentage)
 		
 		// Show the forecast indicator if that data is available
 		if lot.hasForecast {
