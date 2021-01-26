@@ -275,6 +275,10 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
 				break
 			}
 		}
+		
+		if let lotlistVC = UIApplication.shared.keyWindow?.rootViewController?.childViewControllers[0] as? LotlistViewController {
+			lotlistVC.updateData()
+		}
 
 		tableView.deselectRow(at: indexPath, animated: true)
 	}
