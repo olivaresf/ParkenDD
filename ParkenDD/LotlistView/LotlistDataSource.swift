@@ -26,11 +26,20 @@ class LotlistDataSource: NSObject, UITableViewDataSource {
         parkingLots = UserDefaults.bool(for: .skipNodataLots) ? lots.filter { $0.state != .nodata } : lots
     }
 
-    func sortLots() {
-        let sortingType = UserDefaults.string(for: .sortingType) ?? ""
-        switch sortingType {
+    /// Command + alt + slash (/) will create the documentation block.
+    /// Use `struct Sorting` static variables when selecting the sorting.
+    /// - Parameter sortType: see `struct Sorting`
+    func sortLots(sortType: String) {
+        switch sortType {
         case Sorting.distance:
-            break
+            parkingLots.sort {
+                if let currentUserLocation = Location.shared.lastKnownLocation,
+                   let dist1 = $0.distance(from: currentUserLocation),
+                   let dist2 = $1.distance(from: currentUserLocation) {
+                    return dist1 < dist2
+                }
+                return $0.name < $1.name
+            }
         case Sorting.alphabetical:
             parkingLots.sort { $0.name < $1.name }
         case Sorting.free:
@@ -40,6 +49,11 @@ class LotlistDataSource: NSObject, UITableViewDataSource {
         default:
             parkingLots = defaultSortedLots
         }
+    }
+    
+    func sortLots() {
+        let sortingType = UserDefaults.string(for: .sortingType) ?? ""
+        sortLots(sortType: sortingType)
     }
 
 //    func sortLots() {

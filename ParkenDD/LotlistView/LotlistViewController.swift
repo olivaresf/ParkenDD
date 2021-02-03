@@ -50,7 +50,21 @@ class LotlistViewController: UITableViewController, UIViewControllerPreviewingDe
 
 		updateData()
 		Timer.every(5.minutes, updateData)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(userDidAuthorizeTracking(_:)),
+                                               name: NSNotification.Name("UserDidAuthorizeLocationTracking"),
+                                               object: nil) // Are we listening to someone in particular?
 	}
+    
+    @objc func userDidAuthorizeTracking(_ notification: Notification) {
+        
+        // Request new lots by distance.
+        dataSource.sortLots(sortType: Sorting.distance)
+        
+        updateTitle(withCity: nil)
+        tableView.reloadData()
+    }
 
 	override func viewWillAppear(_ animated: Bool) {
 		tableView.reloadData()

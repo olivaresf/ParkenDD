@@ -21,7 +21,7 @@ class Location: NSObject {
         return CLLocationManager.authorizationStatus()
     }
 
-    var lastLocation: CLLocation?
+    var lastKnownLocation: CLLocation?
 
     // This is really weird o.O
     var didMove = [(CLLocation) -> Void]()
@@ -31,13 +31,30 @@ class Location: NSObject {
 }
 
 extension Location: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        
+        guard let currentLocation = manager.location else { return }
+        
+        lastKnownLocation = currentLocation
+        
+        NotificationCenter.default.post(name: NSNotification.Name("UserDidAuthorizeLocationTracking"),
+                                        object: lastKnownLocation)
+    }
+    
+    // This function is likely to be called whenever the user moves.
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
         guard let currentLocation = locations.last else { return }
-        guard let lastLocation = lastLocation else { self.lastLocation = currentLocation; return }
+        
+        guard let lastLocation = lastKnownLocation else {
+            self.lastKnownLocation = currentLocation
+            return
+        }
 
         let distance = currentLocation.distance(from: lastLocation)
         if distance > 100 {
-            self.lastLocation = currentLocation
+            self.lastKnownLocation = currentLocation
             didMove.forEach { $0(currentLocation) }
         }
     }
